@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { AccessGuard, Actions, UseAbility } from "nest-casl";
 
@@ -36,6 +36,13 @@ export class HallController {
   @UseAbility(Actions.update, Hall, HallHook)
   editHall(@Param("id", ParseUUIDPipe) hallId: string, @Body() editHallDto: EditHallDto) {
     return this.hallService.edit(hallId, editHallDto);
+  }
+
+  @Delete("/:id")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.delete, Hall, HallHook)
+  deleteHall(@Param("id", ParseUUIDPipe) hallId: string) {
+    return this.hallService.delete(hallId);
   }
 
   @Patch("/:id/join")

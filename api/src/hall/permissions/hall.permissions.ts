@@ -13,5 +13,6 @@ export const hallPermissions: Permissions<Role, Subjects, Actions> = {
 
   user({ can, user }) {
     can(Actions.update, Hall, { users: { $elemMatch: { role: HallRole.teacher, userId: user.id } } });
+    can(Actions.delete, Hall, { users: { $elemMatch: { role: HallRole.teacher, userId: user.id } } });
   },
 };

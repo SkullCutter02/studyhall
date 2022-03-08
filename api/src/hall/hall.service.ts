@@ -63,6 +63,10 @@ export class HallService {
     return this.prisma.hall.update({ where: { id: hallId }, data: editHallDto });
   }
 
+  public async delete(hallId: string) {
+    return this.prisma.hall.delete({ where: { id: hallId } });
+  }
+
   public async join(hallId: string, user: User) {
     const userHalls = await this.findByUser(user.id);
 
