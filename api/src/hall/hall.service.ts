@@ -9,9 +9,9 @@ import { generateAlphanumericString } from "../utils/generateAlphanumericString"
 export class HallService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async findById(id: string) {
+  public async findById(hallId: string) {
     return this.prisma.hall.findUnique({
-      where: { id },
+      where: { id: hallId },
       include: {
         users: {
           include: {
@@ -19,6 +19,13 @@ export class HallService {
           },
         },
       },
+      rejectOnNotFound: true,
+    });
+  }
+
+  public async findByUser(userId: string) {
+    return this.prisma.hall.findMany({
+      where: { users: { some: { userId: userId } } },
     });
   }
 

@@ -15,6 +15,12 @@ export class HallController {
     return this.hallService.findById(hallId);
   }
 
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  getHalls(@GetUser() user: User) {
+    return this.hallService.findByUser(user.id);
+  }
+
   @Post()
   @UseGuards(JwtAuthGuard)
   createHall(@GetUser() user: User, @Body() createHallDto: CreateHallDto) {
