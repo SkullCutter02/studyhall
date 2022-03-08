@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { HallRole, User } from "@prisma/client";
+import { ConfigService } from "@nestjs/config";
 
 import { CreateHallDto } from "./dto/createHall.dto";
 import { PrismaService } from "../prisma/prisma.service";
@@ -7,7 +8,7 @@ import { generateAlphanumericString } from "../utils/generateAlphanumericString"
 
 @Injectable()
 export class HallService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
 
   public async findById(hallId: string) {
     return this.prisma.hall.findUnique({
@@ -30,6 +31,11 @@ export class HallService {
   }
 
   public async create({ name, nickname }: CreateHallDto, user: User) {
+    const userHalls = await this.findByUser(user.id);
+
+    if (userHalls.length >= this.configService.get<number>("MAX_NUMBER_HALLS"))
+      throw new BadRequestException("Maximum joined hall number exceeded");
+
     return this.prisma.hall.create({
       data: {
         name,
@@ -53,6 +59,11 @@ export class HallService {
   }
 
   public async join(hallId: string, user: User) {
+    const userHalls = await this.findByUser(user.id);
+
+    if (userHalls.length >= this.configService.get<number>("MAX_NUMBER_HALLS"))
+      throw new BadRequestException("Maximum joined hall number exceeded");
+
     const doesUserExistsInHall = !!(await this.prisma.user.findFirst({
       where: { AND: { id: user.id, halls: { some: { hallId } } } },
     }));
