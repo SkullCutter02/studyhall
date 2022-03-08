@@ -50,7 +50,7 @@ export class HallController {
   @Patch("/:id/join")
   @UseGuards(JwtAuthGuard)
   joinHall(@Param("id", ParseUUIDPipe) hallId: string, @GetUser() user: User) {
-    return this.hallService.join(hallId, user);
+    return this.hallService.addUser(hallId, user);
   }
 
   @Patch("/:id/leave")

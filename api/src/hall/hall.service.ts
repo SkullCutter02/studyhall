@@ -67,7 +67,7 @@ export class HallService {
     return this.prisma.hall.delete({ where: { id: hallId } });
   }
 
-  public async join(hallId: string, user: User) {
+  public async addUser(hallId: string, user: User) {
     const userHalls = await this.findByUser(user.id);
 
     if (userHalls.length >= this.configService.get<number>("MAX_NUMBER_HALLS"))
@@ -110,6 +110,10 @@ export class HallService {
     if (isUserTeacherInHall && teacherCount <= 1)
       throw new BadRequestException("You cannot leave this hall as you are the only teacher in this hall");
 
+    return this.removeUser(hallId, user);
+  }
+
+  public async removeUser(hallId: string, user: User) {
     return this.prisma.hall.update({
       where: { id: hallId },
       data: {
