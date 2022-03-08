@@ -15,6 +15,8 @@ export class HallController {
   constructor(private readonly hallService: HallService) {}
 
   @Get("/:id")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.read, Hall, HallHook)
   getHall(@Param("id", ParseUUIDPipe) hallId: string) {
     return this.hallService.findById(hallId);
   }
