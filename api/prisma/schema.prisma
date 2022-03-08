@@ -22,6 +22,7 @@ model User {
   updatedAt DateTime @updatedAt
   name String
   email String @unique
+  roles Role[]
 
   info Info?
   halls HallsUsers[]
@@ -62,6 +63,11 @@ model Info {
   currentHashedRefreshToken String?
 
   @@map("infos")
+}
+
+enum Role {
+  admin
+  user
 }
 
 enum HallRole {

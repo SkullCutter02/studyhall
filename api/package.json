@@ -42,6 +42,7 @@
     "helmet": "^4.6.0",
     "juice": "^8.0.0",
     "knex": "^0.21.21",
+    "nest-casl": "^1.6.6",
     "nodemailer": "^6.6.3",
     "nodemailer-html-to-text": "^3.2.0",
     "nodemailer-sendgrid": "^1.0.3",

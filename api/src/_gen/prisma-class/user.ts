@@ -1,5 +1,6 @@
 import { Info } from "./info";
 import { HallsUsers } from "./halls_users";
+import { Role } from "@prisma/client";
 
 export class User {
   id: string;
@@ -11,6 +12,8 @@ export class User {
   name: string;
 
   email: string;
+
+  roles: Role[];
 
   info?: Info;
 

@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 
 const users: User[] = [
   {
@@ -7,6 +7,7 @@ const users: User[] = [
     updatedAt: new Date("Tue Sep 21 2021 16:16:50 GMT-0400 (Eastern Daylight Time)"),
     name: "SkullCutter",
     email: "coolalan2016@gmail.com",
+    roles: [Role.user],
   },
   {
     id: "9d89eedb-687d-4f5b-a6f2-dd4f723edf8e",
@@ -14,6 +15,7 @@ const users: User[] = [
     updatedAt: new Date("Tue Sep 21 2021 16:16:50 GMT-0400 (Eastern Daylight Time)"),
     name: "Alan Au",
     email: "chunyaa2023@student.cis.edu.hk",
+    roles: [Role.user],
   },
 ];
 

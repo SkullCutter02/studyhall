@@ -5,6 +5,7 @@ import { ConfigService } from "@nestjs/config";
 import { CreateHallDto } from "./dto/createHall.dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { generateAlphanumericString } from "../utils/generateAlphanumericString";
+import { EditHallDto } from "./dto/editHall.dto";
 
 @Injectable()
 export class HallService {
@@ -56,6 +57,10 @@ export class HallService {
         },
       },
     });
+  }
+
+  public async edit(hallId: string, editHallDto: EditHallDto) {
+    return this.prisma.hall.update({ where: { id: hallId }, data: editHallDto });
   }
 
   public async join(hallId: string, user: User) {

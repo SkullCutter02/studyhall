@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import * as argon2 from "argon2";
+import { Role } from "@prisma/client";
 
 import { ChangeUserDetailsDto } from "./dto/changeUserDetails.dto";
 import { PrismaService } from "../prisma/prisma.service";
@@ -14,6 +15,7 @@ export class UserService {
         data: {
           name,
           email,
+          roles: [Role.user],
           info: {
             create: {
               hash,
