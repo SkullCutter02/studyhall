@@ -32,11 +32,6 @@ export class HallService {
   }
 
   public async create({ name, nickname }: CreateHallDto, user: User) {
-    const userHalls = await this.findByUser(user.id);
-
-    if (userHalls.length >= this.configService.get<number>("MAX_NUMBER_HALLS"))
-      throw new BadRequestException("Maximum joined hall number exceeded");
-
     return this.prisma.hall.create({
       data: {
         name,
@@ -68,11 +63,6 @@ export class HallService {
   }
 
   public async addUser(hallId: string, user: User) {
-    const userHalls = await this.findByUser(user.id);
-
-    if (userHalls.length >= this.configService.get<number>("MAX_NUMBER_HALLS"))
-      throw new BadRequestException("Maximum joined hall number exceeded");
-
     const doesUserExistsInHall = !!(await this.prisma.user.findFirst({
       where: { AND: { id: user.id, halls: { some: { hallId } } } },
     }));
@@ -124,5 +114,14 @@ export class HallService {
         },
       },
     });
+  }
+
+  public async hasUserReachedMaxHallCount(userId: string) {
+    const userHalls = await this.findByUser(userId);
+
+    if (userHalls.length >= this.configService.get<number>("MAX_NUMBER_HALLS"))
+      throw new BadRequestException("Maximum joined hall number exceeded");
+
+    return true;
   }
 }

@@ -9,6 +9,7 @@ import { HallService } from "./hall.service";
 import { EditHallDto } from "./dto/editHall.dto";
 import { Hall } from "../_gen/prisma-class/hall";
 import { HallHook } from "./permissions/hall.hook";
+import { CheckMaximumHallsGuard } from "./guards/checkMaximumHalls.guard";
 
 @Controller("hall")
 export class HallController {
@@ -28,7 +29,7 @@ export class HallController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CheckMaximumHallsGuard)
   createHall(@GetUser() user: User, @Body() createHallDto: CreateHallDto) {
     return this.hallService.create(createHallDto, user);
   }
@@ -48,7 +49,7 @@ export class HallController {
   }
 
   @Patch("/:id/join")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CheckMaximumHallsGuard)
   joinHall(@Param("id", ParseUUIDPipe) hallId: string, @GetUser() user: User) {
     return this.hallService.addUser(hallId, user);
   }
