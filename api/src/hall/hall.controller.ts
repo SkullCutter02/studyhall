@@ -96,4 +96,17 @@ export class HallController {
 
     return this.hallService.changeUserRole(hallId, userId, HallRole.student);
   }
+
+  @Patch("/:id/kick/:userId")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, Hall, HallHook)
+  kick(
+    @Param("id", ParseUUIDPipe) hallId: string,
+    @Param("userId", ParseUUIDPipe) userId: string,
+    @GetUser() user: User
+  ) {
+    if (user.id === userId) throw new BadRequestException("You cannot kick yourself!");
+
+    return this.hallService.removeUser(hallId, userId);
+  }
 }

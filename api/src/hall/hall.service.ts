@@ -100,16 +100,16 @@ export class HallService {
     if (isUserTeacherInHall && teacherCount <= 1)
       throw new BadRequestException("You cannot leave this hall as you are the only teacher in this hall");
 
-    return this.removeUser(hallId, user);
+    return this.removeUser(hallId, user.id);
   }
 
-  public async removeUser(hallId: string, user: User) {
+  public async removeUser(hallId: string, userId: string) {
     return this.prisma.hall.update({
       where: { id: hallId },
       data: {
         users: {
           deleteMany: {
-            userId: user.id,
+            userId,
           },
         },
       },
