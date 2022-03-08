@@ -116,6 +116,20 @@ export class HallService {
     });
   }
 
+  public async changeUserRole(hallId: string, userId: string, role: HallRole) {
+    return this.prisma.hall.update({
+      where: { id: hallId },
+      data: {
+        users: {
+          updateMany: {
+            where: { userId },
+            data: { role },
+          },
+        },
+      },
+    });
+  }
+
   public async hasUserReachedMaxHallCount(userId: string) {
     const userHalls = await this.findByUser(userId);
 

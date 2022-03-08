@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from "@nestjs/common";
-import { User } from "@prisma/client";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
+import { HallRole, User } from "@prisma/client";
 import { AccessGuard, Actions, UseAbility } from "nest-casl";
 
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
@@ -58,5 +69,31 @@ export class HallController {
   @UseGuards(JwtAuthGuard)
   leaveHall(@Param("id", ParseUUIDPipe) hallId: string, @GetUser() user: User) {
     return this.hallService.leave(hallId, user);
+  }
+
+  @Patch("/:id/promote/:userId")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, Hall, HallHook)
+  promoteUser(
+    @Param("id", ParseUUIDPipe) hallId: string,
+    @Param("userId", ParseUUIDPipe) userId: string,
+    @GetUser() user: User
+  ) {
+    if (user.id === userId) throw new BadRequestException("You cannot promote yourself!");
+
+    return this.hallService.changeUserRole(hallId, userId, HallRole.teacher);
+  }
+
+  @Patch("/:id/demote/:userId")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, Hall, HallHook)
+  demoteUser(
+    @Param("id", ParseUUIDPipe) hallId: string,
+    @Param("userId", ParseUUIDPipe) userId: string,
+    @GetUser() user: User
+  ) {
+    if (user.id === userId) throw new BadRequestException("You cannot demote yourself!");
+
+    return this.hallService.changeUserRole(hallId, userId, HallRole.student);
   }
 }
