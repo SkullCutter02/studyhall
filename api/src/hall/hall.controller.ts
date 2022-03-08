@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { User } from "@prisma/client";
 
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
@@ -25,5 +25,11 @@ export class HallController {
   @UseGuards(JwtAuthGuard)
   createHall(@GetUser() user: User, @Body() createHallDto: CreateHallDto) {
     return this.hallService.create(createHallDto, user);
+  }
+
+  @Patch("/:id/join")
+  @UseGuards(JwtAuthGuard)
+  joinHall(@Param("id", ParseUUIDPipe) hallId: string, @GetUser() user: User) {
+    return this.hallService.join(hallId, user);
   }
 }

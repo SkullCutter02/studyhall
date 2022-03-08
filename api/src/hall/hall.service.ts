@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { HallRole, User } from "@prisma/client";
 
 import { CreateHallDto } from "./dto/createHall.dto";
@@ -47,6 +47,31 @@ export class HallService {
               },
             },
           ],
+        },
+      },
+    });
+  }
+
+  public async join(hallId: string, user: User) {
+    const doesUserExistsInHall = !!(await this.prisma.user.findFirst({
+      where: { AND: { id: user.id, halls: { some: { hallId } } } },
+    }));
+
+    if (doesUserExistsInHall) throw new BadRequestException("User has already joined this hall");
+
+    return this.prisma.hall.update({
+      where: { id: hallId },
+      data: {
+        users: {
+          create: {
+            role: HallRole.student,
+            joinedAt: new Date(),
+            user: {
+              connect: {
+                id: user.id,
+              },
+            },
+          },
         },
       },
     });
