@@ -32,4 +32,10 @@ export class HallController {
   joinHall(@Param("id", ParseUUIDPipe) hallId: string, @GetUser() user: User) {
     return this.hallService.join(hallId, user);
   }
+
+  @Patch("/:id/leave")
+  @UseGuards(JwtAuthGuard)
+  leaveHall(@Param("id", ParseUUIDPipe) hallId: string, @GetUser() user: User) {
+    return this.hallService.leave(hallId, user);
+  }
 }

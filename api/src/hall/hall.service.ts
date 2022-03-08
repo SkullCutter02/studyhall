@@ -76,4 +76,29 @@ export class HallService {
       },
     });
   }
+
+  public async leave(hallId: string, user: User) {
+    const hall = await this.findById(hallId);
+
+    const isUserTeacherInHall = hall.users.some(
+      (hallUser) => hallUser.user.id === user.id && hallUser.role === HallRole.teacher
+    );
+    const teacherCount = await this.prisma.hallsUsers.count({
+      where: { role: HallRole.teacher, hallId },
+    });
+
+    if (isUserTeacherInHall && teacherCount <= 1)
+      throw new BadRequestException("You cannot leave this hall as you are the only teacher in this hall");
+
+    return this.prisma.hall.update({
+      where: { id: hallId },
+      data: {
+        users: {
+          deleteMany: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+  }
 }
