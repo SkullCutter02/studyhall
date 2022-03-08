@@ -9,6 +9,19 @@ import { generateAlphanumericString } from "../utils/generateAlphanumericString"
 export class HallService {
   constructor(private readonly prisma: PrismaService) {}
 
+  public async findById(id: string) {
+    return this.prisma.hall.findUnique({
+      where: { id },
+      include: {
+        users: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+  }
+
   public async create({ name, nickname }: CreateHallDto, user: User) {
     return this.prisma.hall.create({
       data: {
