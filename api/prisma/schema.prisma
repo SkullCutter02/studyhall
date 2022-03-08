@@ -49,7 +49,7 @@ model HallsUsers {
 
   hall Hall @relation(fields: [hallId], references: [id], onDelete: Cascade)
   hallId String
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   @@id([hallId, userId])
