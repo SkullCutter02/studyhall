@@ -1,26 +1,21 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { HallRole, User } from "@prisma/client";
+import { HallRole, Prisma, User } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
 
 import { CreateHallDto } from "./dto/createHall.dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { generateAlphanumericString } from "../utils/generateAlphanumericString";
 import { EditHallDto } from "./dto/editHall.dto";
+import { HallWithUsers } from "./types/hallWithUsers.type";
 
 @Injectable()
 export class HallService {
   constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
 
-  public async findById(hallId: string) {
+  public async findById(hallId: string, include?: Prisma.HallInclude) {
     return this.prisma.hall.findUnique({
       where: { id: hallId },
-      include: {
-        users: {
-          include: {
-            user: true,
-          },
-        },
-      },
+      include: include,
       rejectOnNotFound: true,
     });
   }
@@ -88,7 +83,7 @@ export class HallService {
   }
 
   public async leave(hallId: string, user: User) {
-    const hall = await this.findById(hallId);
+    const hall = (await this.findById(hallId, { users: { include: { user: true } } })) as HallWithUsers;
 
     const isUserTeacherInHall = hall.users.some(
       (hallUser) => hallUser.user.id === user.id && hallUser.role === HallRole.teacher

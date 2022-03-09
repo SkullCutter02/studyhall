@@ -1,9 +1,13 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from "@nestjs/common";
+import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
 import merge from "lodash.merge";
 
 @Injectable()
 export class TransformIncludeQueryPipe implements PipeTransform {
   transform(value: string, metadata: ArgumentMetadata): any {
+    if (!value) return value;
+
+    if (typeof value !== "string") throw new BadRequestException("Include query is not a string");
+
     const splittedValue = value.split(",");
     let obj = {};
 

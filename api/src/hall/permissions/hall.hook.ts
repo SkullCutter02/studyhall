@@ -9,6 +9,6 @@ export class HallHook implements SubjectBeforeFilterHook<Hall, Request> {
   constructor(private readonly hallService: HallService) {}
 
   async run({ params }: Request) {
-    return (await this.hallService.findById(params.id)) as Hall;
+    return (await this.hallService.findById(params.id, { users: { include: { user: true } } })) as Hall;
   }
 }

@@ -11,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { HallRole, User } from "@prisma/client";
+import { HallRole, User, Prisma } from "@prisma/client";
 import { AccessGuard, Actions, UseAbility } from "nest-casl";
 
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
@@ -31,8 +31,11 @@ export class HallController {
   @Get("/:id")
   @UseGuards(JwtAuthGuard, AccessGuard)
   @UseAbility(Actions.read, Hall, HallHook)
-  getHall(@Param("id", ParseUUIDPipe) hallId: string, @Query("include", TransformIncludeQueryPipe) include) {
-    return this.hallService.findById(hallId);
+  getHall(
+    @Param("id", ParseUUIDPipe) hallId: string,
+    @Query("include", TransformIncludeQueryPipe) include: Prisma.HallInclude
+  ) {
+    return this.hallService.findById(hallId, include);
   }
 
   @Get()
