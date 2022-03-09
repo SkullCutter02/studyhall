@@ -11,6 +11,7 @@ import { ResetPasswordDto } from "./dto/resetPassword.dto";
 import { MailService } from "../mail/mail.service";
 import { RedisService } from "../redis/redis.service";
 import { Prisma } from "@prisma/client";
+import { UserWithInfo } from "../user/types/userWithInfo.type";
 
 @Injectable()
 export class AuthService {
@@ -83,7 +84,7 @@ export class AuthService {
   }
 
   public async validateUserCredentials(email: string, password: string) {
-    const user = await this.userService.findByEmail(email, true);
+    const user = (await this.userService.findByEmail(email, { info: true })) as UserWithInfo;
 
     if (!user) throw new UnauthorizedException();
     if (!(await argon2.verify(user.info.hash, password))) throw new UnauthorizedException();

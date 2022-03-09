@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import * as argon2 from "argon2";
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 
 import { ChangeUserDetailsDto } from "./dto/changeUserDetails.dto";
 import { PrismaService } from "../prisma/prisma.service";
@@ -35,12 +35,12 @@ export class UserService {
     if (user) return user;
   }
 
-  public findById(userId: string, includeInfo = false) {
-    return this.prisma.user.findUnique({ where: { id: userId }, include: { info: includeInfo } });
+  public findById(userId: string, include?: Prisma.UserInclude) {
+    return this.prisma.user.findUnique({ where: { id: userId }, include });
   }
 
-  public findByEmail(email: string, includeInfo = false) {
-    return this.prisma.user.findUnique({ where: { email }, include: { info: includeInfo } });
+  public findByEmail(email: string, include?: Prisma.UserInclude) {
+    return this.prisma.user.findUnique({ where: { email }, include });
   }
 
   public async findByRefreshToken(refreshToken: string, userId: string) {

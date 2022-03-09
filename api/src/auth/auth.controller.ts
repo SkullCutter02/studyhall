@@ -61,10 +61,4 @@ export class AuthController {
   deleteAccount(@GetUser() user: User) {
     return this.authService.deleteAccount(user.id);
   }
-
-  @Get("/me")
-  @UseGuards(JwtAuthGuard)
-  me(@GetUser() user: User) {
-    return user;
-  }
 }
