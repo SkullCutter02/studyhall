@@ -6,6 +6,8 @@ import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { GetUser } from "../decorators/getUser.decorator";
 import { CreateQuestionDto } from "./dto/createQuestion.dto";
 import { TransformIncludeQueryPipe } from "../pipes/transformIncludeQuery.pipe";
+import { CursorPaginateDto } from "../dto/cursorPaginate.dto";
+import { CursorPaginateWithFilterDto } from "../dto/cursorPaginateWithFilter.dto";
 
 @Controller("question")
 export class QuestionController {
@@ -22,9 +24,10 @@ export class QuestionController {
   @Get()
   getQuestions(
     @Query("hallId", ParseUUIDPipe) hallId: string,
+    @Query() cursorPaginateWithFilterDto: CursorPaginateWithFilterDto,
     @Query("include", TransformIncludeQueryPipe) include?: Prisma.QuestionInclude
   ) {
-    return this.questionService.findAllInHall(hallId, include);
+    return this.questionService.findAllInHall(hallId, cursorPaginateWithFilterDto, include);
   }
 
   @Post()

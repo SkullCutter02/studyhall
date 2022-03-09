@@ -3,6 +3,7 @@ import { Prisma, User } from "@prisma/client";
 
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateQuestionDto } from "./dto/createQuestion.dto";
+import { CursorPaginateWithFilterDto } from "../dto/cursorPaginateWithFilter.dto";
 
 @Injectable()
 export class QuestionService {
@@ -15,8 +16,31 @@ export class QuestionService {
     });
   }
 
-  async findAllInHall(hallId: string, include?: Prisma.QuestionInclude) {
-    return this.prisma.question.findMany({ where: { hallId }, include });
+  async findAllInHall(
+    hallId: string,
+    { limit, filter, cursor }: CursorPaginateWithFilterDto,
+    include?: Prisma.QuestionInclude
+  ) {
+    const findManyInput: Prisma.QuestionFindManyArgs = {
+      take: limit,
+      cursor: cursor ? { id: cursor } : undefined,
+      where: {
+        hallId,
+        title: {
+          contains: filter,
+          mode: "insensitive",
+        },
+      },
+      orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+      include,
+    };
+
+    const [questions, nextPage] = await this.prisma.$transaction([
+      this.prisma.question.findMany({ ...findManyInput, skip: cursor ? 1 : undefined }),
+      this.prisma.question.findMany({ ...findManyInput, skip: cursor ? limit + 1 : limit }),
+    ]);
+
+    return { data: questions, hasMore: nextPage.length !== 0 };
   }
 
   async create({ hallId, ...rest }: CreateQuestionDto, user: User) {
