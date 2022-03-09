@@ -16,7 +16,7 @@ export class Question {
 
   answered: boolean;
 
-  author: User;
+  author?: User;
 
   authorId: string;
 

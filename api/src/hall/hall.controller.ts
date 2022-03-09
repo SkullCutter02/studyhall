@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { HallRole, User } from "@prisma/client";
@@ -21,6 +22,7 @@ import { EditHallDto } from "./dto/editHall.dto";
 import { Hall } from "../_gen/prisma-class/hall";
 import { HallHook } from "./permissions/hall.hook";
 import { CheckMaximumHallsGuard } from "./guards/checkMaximumHalls.guard";
+import { TransformIncludeQueryPipe } from "../pipes/transformIncludeQuery.pipe";
 
 @Controller("hall")
 export class HallController {
@@ -29,7 +31,7 @@ export class HallController {
   @Get("/:id")
   @UseGuards(JwtAuthGuard, AccessGuard)
   @UseAbility(Actions.read, Hall, HallHook)
-  getHall(@Param("id", ParseUUIDPipe) hallId: string) {
+  getHall(@Param("id", ParseUUIDPipe) hallId: string, @Query("include", TransformIncludeQueryPipe) include) {
     return this.hallService.findById(hallId);
   }
 
