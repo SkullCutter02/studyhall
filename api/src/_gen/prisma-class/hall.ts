@@ -1,4 +1,5 @@
 import { HallsUsers } from "./halls_users";
+import { Question } from "./question";
 
 export class Hall {
   id: string;
@@ -12,4 +13,6 @@ export class Hall {
   code: string;
 
   users: HallsUsers[];
+
+  questions: Question[];
 }

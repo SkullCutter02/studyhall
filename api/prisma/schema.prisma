@@ -26,6 +26,7 @@ model User {
 
   info Info?
   halls HallsUsers[]
+  questions Question[]
 
   @@map("users")
 }
@@ -38,8 +39,26 @@ model Hall {
   code String @unique
 
   users HallsUsers[]
+  questions Question[]
 
   @@map("halls")
+}
+
+model Question {
+  id String @default(uuid()) @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title String
+  body String
+  whiteboard String?
+  answered Boolean @default(false)
+
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId String
+  hall Hall @relation(fields: [hallId], references: [id], onDelete: Cascade)
+  hallId String
+
+  @@map("questions")
 }
 
 model HallsUsers {
