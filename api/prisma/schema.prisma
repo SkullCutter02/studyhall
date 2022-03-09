@@ -17,58 +17,58 @@ datasource db {
 }
 
 model User {
-  id String @default(uuid()) @id
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name String
-  email String @unique
-  roles Role[]
+  name      String
+  email     String   @unique
+  roles     Role[]
 
-  info Info?
-  halls HallsUsers[]
+  info      Info?
+  halls     HallsUsers[]
   questions Question[]
 
   @@map("users")
 }
 
 model Hall {
-  id String @default(uuid()) @id
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name String
-  code String @unique
+  name      String
+  code      String   @unique
 
-  users HallsUsers[]
+  users     HallsUsers[]
   questions Question[]
 
   @@map("halls")
 }
 
 model Question {
-  id String @default(uuid()) @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title String
-  body String
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  title      String
+  body       String
   whiteboard String?
-  answered Boolean @default(false)
+  answered   Boolean  @default(false)
 
-  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  author   User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
   authorId String
-  hall Hall @relation(fields: [hallId], references: [id], onDelete: Cascade)
-  hallId String
+  hall     Hall   @relation(fields: [hallId], references: [id], onDelete: Cascade)
+  hallId   String
 
   @@map("questions")
 }
 
 model HallsUsers {
-  role HallRole
+  role     HallRole
   nickname String?
   joinedAt DateTime @default(now())
 
-  hall Hall @relation(fields: [hallId], references: [id], onDelete: Cascade)
+  hall   Hall   @relation(fields: [hallId], references: [id], onDelete: Cascade)
   hallId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   @@id([hallId, userId])
@@ -76,9 +76,9 @@ model HallsUsers {
 }
 
 model Info {
-  id String @id
-  user User @relation(fields: [id], references: [id], onDelete: Cascade)
-  hash String
+  id                        String  @id
+  user                      User    @relation(fields: [id], references: [id], onDelete: Cascade)
+  hash                      String
   currentHashedRefreshToken String?
 
   @@map("infos")
