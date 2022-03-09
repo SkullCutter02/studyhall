@@ -12,6 +12,7 @@ import { MailModule } from "./mail/mail.module";
 import { RedisModule } from "./redis/redis.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { HallModule } from "./hall/hall.module";
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { HallModule } from "./hall/hall.module";
       superuserRole: Role.admin,
       getUserFromRequest: (request) => request.user,
     }),
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
