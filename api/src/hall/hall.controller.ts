@@ -41,7 +41,7 @@ export class HallController {
   @Get()
   @UseGuards(JwtAuthGuard)
   getHalls(@GetUser() user: User, @Query("include", TransformIncludeQueryPipe) include: Prisma.HallInclude) {
-    return this.hallService.findByUser(user.id, include);
+    return this.hallService.findAll(include);
   }
 
   @Post()

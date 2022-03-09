@@ -20,6 +20,10 @@ export class HallService {
     });
   }
 
+  public async findAll(include?: Prisma.HallInclude) {
+    return this.prisma.hall.findMany({ include });
+  }
+
   public async findByUser(userId: string, include?: Prisma.HallInclude) {
     return this.prisma.hall.findMany({
       where: { users: { some: { userId: userId } } },
