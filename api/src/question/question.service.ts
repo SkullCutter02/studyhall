@@ -15,6 +15,10 @@ export class QuestionService {
     });
   }
 
+  async findAllInHall(hallId: string, include?: Prisma.QuestionInclude) {
+    return this.prisma.question.findMany({ where: { hallId }, include });
+  }
+
   async create({ hallId, ...rest }: CreateQuestionDto, user: User) {
     return this.prisma.question.create({
       data: {

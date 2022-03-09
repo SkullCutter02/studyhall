@@ -12,11 +12,19 @@ export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Get("/:id")
-  getHall(
+  getQuestion(
     @Param("id", ParseUUIDPipe) questionId: string,
     @Query("include", TransformIncludeQueryPipe) include: Prisma.QuestionInclude
   ) {
     return this.questionService.findById(questionId, include);
+  }
+
+  @Get()
+  getQuestions(
+    @Query("hallId", ParseUUIDPipe) hallId: string,
+    @Query("include", TransformIncludeQueryPipe) include?: Prisma.QuestionInclude
+  ) {
+    return this.questionService.findAllInHall(hallId, include);
   }
 
   @Post()
