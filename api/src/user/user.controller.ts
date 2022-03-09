@@ -14,7 +14,9 @@ export class UserController {
   @Get("/me")
   @UseGuards(JwtAuthGuard)
   me(@GetUser() user: User, @Query("include", TransformIncludeQueryPipe) include: Prisma.UserInclude) {
-    return this.userService.findById(user.id, include);
+    // if the request requests user.info, it will delete it automatically
+    delete include?.info;
+    return this.userService.findById(user.id, include && Object.keys(include).length && include);
   }
 
   @Patch()
