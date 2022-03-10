@@ -37,12 +37,12 @@ export class QuestionService {
       include,
     };
 
-    const [questions, nextPage] = await this.prisma.$transaction([
+    const [questions, nextPageCount] = await this.prisma.$transaction([
       this.prisma.question.findMany({ ...findManyInput, skip: cursor ? 1 : undefined }),
       this.prisma.question.count({ ...removeProperty(findManyInput, "include"), skip: cursor ? limit + 1 : limit }),
     ]);
 
-    return { data: questions, hasMore: nextPage !== 0 };
+    return { data: questions, hasMore: nextPageCount !== 0 };
   }
 
   async create({ hallId, ...rest }: CreateQuestionDto, user: User) {
@@ -69,5 +69,9 @@ export class QuestionService {
       where: { id: questionId },
       data: editQuestionDto,
     });
+  }
+
+  async delete(questionId: string) {
+    return this.prisma.question.delete({ where: { id: questionId } });
   }
 }

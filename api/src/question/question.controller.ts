@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { AccessGuard, Actions, UseAbility } from "nest-casl";
 import { Prisma, User } from "@prisma/client";
 
@@ -44,5 +44,12 @@ export class QuestionController {
   @UseAbility(Actions.update, Question, QuestionHook)
   editQuestion(@Param("id", ParseUUIDPipe) questionId: string, @Body() editQuestionDto: EditQuestionDto) {
     return this.questionService.edit(questionId, editQuestionDto);
+  }
+
+  @Delete("/:id")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.delete, Question, QuestionHook)
+  deleteQuestion(@Param("id", ParseUUIDPipe) questionId: string) {
+    return this.questionService.delete(questionId);
   }
 }
