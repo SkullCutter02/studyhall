@@ -15,6 +15,7 @@ export class QuestionService {
     return this.prisma.question.findUnique({
       where: { id: questionId },
       include,
+      rejectOnNotFound: true,
     });
   }
 
