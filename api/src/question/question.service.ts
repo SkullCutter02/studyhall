@@ -4,6 +4,7 @@ import { Prisma, User } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateQuestionDto } from "./dto/createQuestion.dto";
 import { CursorPaginateWithFilterDto } from "../dto/cursorPaginateWithFilter.dto";
+import { EditQuestionDto } from "./dto/editQuestion.dto";
 
 @Injectable()
 export class QuestionService {
@@ -59,6 +60,13 @@ export class QuestionService {
         },
       },
       include: { author: true, hall: true },
+    });
+  }
+
+  async edit(questionId: string, editQuestionDto: EditQuestionDto) {
+    return this.prisma.question.update({
+      where: { id: questionId },
+      data: editQuestionDto,
     });
   }
 }

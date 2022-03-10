@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 
 import { QuestionService } from "./question.service";
@@ -8,6 +8,7 @@ import { CreateQuestionDto } from "./dto/createQuestion.dto";
 import { TransformIncludeQueryPipe } from "../pipes/transformIncludeQuery.pipe";
 import { CursorPaginateDto } from "../dto/cursorPaginate.dto";
 import { CursorPaginateWithFilterDto } from "../dto/cursorPaginateWithFilter.dto";
+import { EditQuestionDto } from "./dto/editQuestion.dto";
 
 @Controller("question")
 export class QuestionController {
@@ -34,5 +35,11 @@ export class QuestionController {
   @UseGuards(JwtAuthGuard)
   createQuestion(@GetUser() user: User, @Body() createQuestionDto: CreateQuestionDto) {
     return this.questionService.create(createQuestionDto, user);
+  }
+
+  @Patch("/:id")
+  @UseGuards(JwtAuthGuard)
+  editQuestion(@Param("id", ParseUUIDPipe) questionId: string, @Body() editQuestionDto: EditQuestionDto) {
+    return this.questionService.edit(questionId, editQuestionDto);
   }
 }
