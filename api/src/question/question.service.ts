@@ -5,6 +5,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { CreateQuestionDto } from "./dto/createQuestion.dto";
 import { CursorPaginateWithFilterDto } from "../dto/cursorPaginateWithFilter.dto";
 import { EditQuestionDto } from "./dto/editQuestion.dto";
+import { removeProperty } from "../utils/removeProperty";
 
 @Injectable()
 export class QuestionService {
@@ -38,10 +39,10 @@ export class QuestionService {
 
     const [questions, nextPage] = await this.prisma.$transaction([
       this.prisma.question.findMany({ ...findManyInput, skip: cursor ? 1 : undefined }),
-      this.prisma.question.findMany({ ...findManyInput, skip: cursor ? limit + 1 : limit }),
+      this.prisma.question.count({ ...removeProperty(findManyInput, "include"), skip: cursor ? limit + 1 : limit }),
     ]);
 
-    return { data: questions, hasMore: nextPage.length !== 0 };
+    return { data: questions, hasMore: nextPage !== 0 };
   }
 
   async create({ hallId, ...rest }: CreateQuestionDto, user: User) {
