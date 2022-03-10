@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { AccessGuard, Actions, UseAbility } from "nest-casl";
 import { Prisma, User } from "@prisma/client";
 
 import { QuestionService } from "./question.service";
@@ -6,9 +7,10 @@ import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { GetUser } from "../decorators/getUser.decorator";
 import { CreateQuestionDto } from "./dto/createQuestion.dto";
 import { TransformIncludeQueryPipe } from "../pipes/transformIncludeQuery.pipe";
-import { CursorPaginateDto } from "../dto/cursorPaginate.dto";
 import { CursorPaginateWithFilterDto } from "../dto/cursorPaginateWithFilter.dto";
 import { EditQuestionDto } from "./dto/editQuestion.dto";
+import { Question } from "../_gen/prisma-class/question";
+import { QuestionHook } from "./permissions/question.hook";
 
 @Controller("question")
 export class QuestionController {
@@ -38,7 +40,8 @@ export class QuestionController {
   }
 
   @Patch("/:id")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, Question, QuestionHook)
   editQuestion(@Param("id", ParseUUIDPipe) questionId: string, @Body() editQuestionDto: EditQuestionDto) {
     return this.questionService.edit(questionId, editQuestionDto);
   }
