@@ -1,5 +1,6 @@
 import { User } from "./user";
 import { Hall } from "./hall";
+import { Answer } from "./answer";
 
 export class Question {
   id: string;
@@ -18,9 +19,11 @@ export class Question {
 
   author?: User;
 
-  authorId: string;
+  authorId?: string;
 
   hall: Hall;
 
   hallId: string;
+
+  answers: Answer[];
 }

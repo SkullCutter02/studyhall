@@ -27,6 +27,7 @@ model User {
   info      Info?
   halls     HallsUsers[]
   questions Question[]
+  answers   Answer[]
 
   @@map("users")
 }
@@ -53,12 +54,32 @@ model Question {
   whiteboard String?
   answered   Boolean  @default(false)
 
-  author   User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
-  authorId String
-  hall     Hall   @relation(fields: [hallId], references: [id], onDelete: Cascade)
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId String?
+  hall     Hall    @relation(fields: [hallId], references: [id], onDelete: Cascade)
   hallId   String
 
+  answers Answer[]
+
   @@map("questions")
+}
+
+model Answer {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  body      String
+
+  author     User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId   String?
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String
+
+  reference   Answer?  @relation("AnswerReferences", fields: [referenceId], references: [id], onDelete: SetNull)
+  referenceId String?
+  references  Answer[] @relation("AnswerReferences")
+
+  @@map("answers")
 }
 
 model HallsUsers {
@@ -76,9 +97,10 @@ model HallsUsers {
 }
 
 model Info {
-  id                        String  @id
-  user                      User    @relation(fields: [id], references: [id], onDelete: Cascade)
-  hash                      String
+  id   String @id
+  user User   @relation(fields: [id], references: [id], onDelete: Cascade)
+  hash String
+
   currentHashedRefreshToken String?
 
   @@map("infos")
