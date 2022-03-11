@@ -22,7 +22,7 @@ import { EditHallDto } from "./dto/editHall.dto";
 import { Hall } from "../_gen/prisma-class/hall";
 import { HallHook } from "./permissions/hall.hook";
 import { CheckMaximumHallsGuard } from "./guards/checkMaximumHalls.guard";
-import { TransformIncludeQueryPipe } from "../pipes/transformIncludeQuery.pipe";
+import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
 
 @Controller("hall")
 export class HallController {
@@ -33,14 +33,14 @@ export class HallController {
   @UseAbility(Actions.read, Hall, HallHook)
   getHall(
     @Param("id", ParseUUIDPipe) hallId: string,
-    @Query("include", TransformIncludeQueryPipe) include: Prisma.HallInclude
+    @Query("include", ParseIncludeQueryPipe) include: Prisma.HallInclude
   ) {
     return this.hallService.findById(hallId, include);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  getHalls(@Query("include", TransformIncludeQueryPipe) include: Prisma.HallInclude) {
+  getHalls(@Query("include", ParseIncludeQueryPipe) include: Prisma.HallInclude) {
     return this.hallService.findAll(include);
   }
 

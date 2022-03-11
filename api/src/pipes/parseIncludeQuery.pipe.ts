@@ -2,7 +2,7 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 import merge from "lodash.merge";
 
 @Injectable()
-export class TransformIncludeQueryPipe implements PipeTransform {
+export class ParseIncludeQueryPipe implements PipeTransform {
   transform(value: string, metadata: ArgumentMetadata): any {
     if (!value) return value;
 

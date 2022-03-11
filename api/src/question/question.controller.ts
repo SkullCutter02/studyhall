@@ -6,7 +6,7 @@ import { QuestionService } from "./question.service";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { GetUser } from "../decorators/getUser.decorator";
 import { CreateQuestionDto } from "./dto/createQuestion.dto";
-import { TransformIncludeQueryPipe } from "../pipes/transformIncludeQuery.pipe";
+import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
 import { CursorPaginateWithFilterDto } from "../dto/cursorPaginateWithFilter.dto";
 import { EditQuestionDto } from "./dto/editQuestion.dto";
 import { Question } from "../_gen/prisma-class/question";
@@ -19,7 +19,7 @@ export class QuestionController {
   @Get("/:id")
   getQuestion(
     @Param("id", ParseUUIDPipe) questionId: string,
-    @Query("include", TransformIncludeQueryPipe) include: Prisma.QuestionInclude
+    @Query("include", ParseIncludeQueryPipe) include: Prisma.QuestionInclude
   ) {
     return this.questionService.findById(questionId, include);
   }
@@ -28,7 +28,7 @@ export class QuestionController {
   getQuestions(
     @Query("hallId", ParseUUIDPipe) hallId: string,
     @Query() cursorPaginateWithFilterDto: CursorPaginateWithFilterDto,
-    @Query("include", TransformIncludeQueryPipe) include?: Prisma.QuestionInclude
+    @Query("include", ParseIncludeQueryPipe) include?: Prisma.QuestionInclude
   ) {
     return this.questionService.findAllInHall(hallId, cursorPaginateWithFilterDto, include);
   }

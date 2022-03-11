@@ -5,7 +5,7 @@ import { UserService } from "./user.service";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { ChangeUserDetailsDto } from "./dto/changeUserDetails.dto";
 import { GetUser } from "../decorators/getUser.decorator";
-import { TransformIncludeQueryPipe } from "../pipes/transformIncludeQuery.pipe";
+import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
 
 @Controller("user")
 export class UserController {
@@ -13,7 +13,7 @@ export class UserController {
 
   @Get("/me")
   @UseGuards(JwtAuthGuard)
-  me(@GetUser() user: User, @Query("include", TransformIncludeQueryPipe) include: Prisma.UserInclude) {
+  me(@GetUser() user: User, @Query("include", ParseIncludeQueryPipe) include: Prisma.UserInclude) {
     // if the request requests user.info, it will delete it automatically
     delete include?.info;
     return this.userService.findById(user.id, include && Object.keys(include).length && include);
