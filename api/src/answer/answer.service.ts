@@ -9,6 +9,7 @@ import { AuthService } from "../auth/auth.service";
 import { CreateAnswerDto } from "./dto/createAnswer.dto";
 import { CursorPaginateDto } from "../dto/cursorPaginate.dto";
 import { removeProperty } from "../utils/removeProperty";
+import { EditAnswerDto } from "./dto/editAnswer.dto";
 
 @Injectable()
 export class AnswerService {
@@ -47,6 +48,14 @@ export class AnswerService {
         author: { connect: { id: user.id } },
         reference: { connect: referenceId ? { id: referenceId } : undefined },
       },
+      include: { question: true, author: true, reference: true },
+    });
+  }
+
+  edit(answerId: string, editAnswerDto: EditAnswerDto) {
+    return this.prisma.answer.update({
+      where: { id: answerId },
+      data: editAnswerDto,
       include: { question: true, author: true, reference: true },
     });
   }
