@@ -7,6 +7,8 @@ import { parse } from "cookie";
 import { PrismaService } from "../prisma/prisma.service";
 import { AuthService } from "../auth/auth.service";
 import { CreateAnswerDto } from "./dto/createAnswer.dto";
+import { CursorPaginateDto } from "../dto/cursorPaginate.dto";
+import { removeProperty } from "../utils/removeProperty";
 
 @Injectable()
 export class AnswerService {
@@ -18,6 +20,23 @@ export class AnswerService {
       include,
       rejectOnNotFound: true,
     });
+  }
+
+  async findAll(questionId: string, { limit, cursor }: CursorPaginateDto, include?: Prisma.AnswerInclude) {
+    const findManyInput: Prisma.AnswerFindManyArgs = {
+      take: limit,
+      cursor: cursor ? { id: cursor } : undefined,
+      where: { questionId },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      include,
+    };
+
+    const [answers, nextPageCount] = await this.prisma.$transaction([
+      this.prisma.answer.findMany({ ...findManyInput, skip: cursor ? 1 : undefined }),
+      this.prisma.answer.count({ ...removeProperty(findManyInput, "include"), skip: cursor ? limit + 1 : limit }),
+    ]);
+
+    return { data: answers, hasMore: nextPageCount === 0 };
   }
 
   create({ questionId, referenceId, ...rest }: CreateAnswerDto, user: User) {
