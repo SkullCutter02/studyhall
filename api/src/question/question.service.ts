@@ -50,16 +50,8 @@ export class QuestionService {
     return this.prisma.question.create({
       data: {
         ...rest,
-        hall: {
-          connect: {
-            id: hallId,
-          },
-        },
-        author: {
-          connect: {
-            id: user.id,
-          },
-        },
+        hall: { connect: { id: hallId } },
+        author: { connect: { id: user.id } },
       },
       include: { author: true, hall: true },
     });
