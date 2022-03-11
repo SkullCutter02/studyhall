@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Query, UseGuards } from "@nestjs/common";
 import { AccessGuard, Actions, UseAbility } from "nest-casl";
 
 import { AnswerService } from "./answer.service";
@@ -36,5 +36,12 @@ export class AnswerController {
   @UseAbility(Actions.update, Answer, AnswerHook)
   editAnswer(@Param("id", ParseUUIDPipe) answerId: string, @Body() editAnswerDto: EditAnswerDto) {
     return this.answerService.edit(answerId, editAnswerDto);
+  }
+
+  @Delete("/:id")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.delete, Answer, AnswerHook)
+  deleteAnswer(@Param("id", ParseUUIDPipe) answerId: string) {
+    return this.answerService.delete(answerId);
   }
 }

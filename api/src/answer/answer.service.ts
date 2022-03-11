@@ -60,6 +60,10 @@ export class AnswerService {
     });
   }
 
+  delete(answerId: string) {
+    return this.prisma.answer.delete({ where: { id: answerId } });
+  }
+
   async getUserFromSocket(socket: Socket) {
     const cookie = socket.handshake.headers.cookie;
     const cookies = parse(cookie);
