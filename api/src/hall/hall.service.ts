@@ -4,7 +4,6 @@ import { ConfigService } from "@nestjs/config";
 
 import { CreateHallDto } from "./dto/createHall.dto";
 import { PrismaService } from "../prisma/prisma.service";
-import { generateAlphanumericString } from "../utils/generateAlphanumericString";
 import { EditHallDto } from "./dto/editHall.dto";
 import { HallWithUsers } from "./types/hallWithUsers.type";
 
@@ -35,7 +34,6 @@ export class HallService {
     return this.prisma.hall.create({
       data: {
         name,
-        code: generateAlphanumericString(),
         users: {
           create: [
             {

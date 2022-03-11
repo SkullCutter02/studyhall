@@ -37,7 +37,7 @@ model Hall {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  code      String   @unique
+  inviteId  String?   @unique
 
   users     HallsUsers[]
   questions Question[]

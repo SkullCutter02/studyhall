@@ -10,7 +10,7 @@ export class Hall {
 
   name: string;
 
-  code: string;
+  inviteId?: string;
 
   users: HallsUsers[];
 
