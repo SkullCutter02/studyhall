@@ -13,6 +13,7 @@ import { RedisModule } from "./redis/redis.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { HallModule } from "./hall/hall.module";
 import { QuestionModule } from './question/question.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { QuestionModule } from './question/question.module';
       getUserFromRequest: (request) => request.user,
     }),
     QuestionModule,
+    AnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
