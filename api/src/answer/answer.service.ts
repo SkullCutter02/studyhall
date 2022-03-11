@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { WsException } from "@nestjs/websockets";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { Socket } from "socket.io";
 import { parse } from "cookie";
 
@@ -11,6 +11,14 @@ import { CreateAnswerDto } from "./dto/createAnswer.dto";
 @Injectable()
 export class AnswerService {
   constructor(private readonly prisma: PrismaService, private readonly authService: AuthService) {}
+
+  findById(answerId: string, include?: Prisma.AnswerInclude) {
+    return this.prisma.answer.findUnique({
+      where: { id: answerId },
+      include,
+      rejectOnNotFound: true,
+    });
+  }
 
   create({ questionId, referenceId, ...rest }: CreateAnswerDto, user: User) {
     return this.prisma.answer.create({
