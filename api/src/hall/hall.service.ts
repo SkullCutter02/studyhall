@@ -31,6 +31,14 @@ export class HallService {
     });
   }
 
+  public async findByInviteId(inviteId: string, include?: Prisma.HallInclude) {
+    return this.prisma.hall.findUnique({
+      where: { inviteId },
+      rejectOnNotFound: true,
+      include,
+    });
+  }
+
   public async create({ name, nickname }: CreateHallDto, user: User) {
     return this.prisma.hall.create({
       data: {

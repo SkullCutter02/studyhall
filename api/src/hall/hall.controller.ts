@@ -64,10 +64,11 @@ export class HallController {
     return this.hallService.delete(hallId);
   }
 
-  @Patch("/:id/join")
+  @Patch("/:inviteId/join")
   @UseGuards(JwtAuthGuard, CheckMaximumHallsGuard)
-  joinHall(@Param("id", ParseUUIDPipe) hallId: string, @GetUser() user: User) {
-    return this.hallService.addUser(hallId, user);
+  async joinHall(@Param("inviteId", ParseUUIDPipe) inviteId: string, @GetUser() user: User) {
+    const hall = await this.hallService.findByInviteId(inviteId);
+    return this.hallService.addUser(hall.id, user);
   }
 
   @Patch("/:id/leave")
