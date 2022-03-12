@@ -120,7 +120,7 @@ export class AuthService {
         expiresIn: this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME"),
       }
     );
-    const cookie = `access-token=${token}; HttpOnly; Path=/; Secure; Max-Age=${this.configService.get<number>(
+    const cookie = `access-token=${token}; SameSite=Lax; HttpOnly; Path=/; Max-Age=${this.configService.get<number>(
       "JWT_ACCESS_TOKEN_EXPIRATION_TIME"
     )}`;
     return { cookie, token };
@@ -134,16 +134,13 @@ export class AuthService {
         expiresIn: this.configService.get("JWT_REFRESH_TOKEN_EXPIRATION_TIME"),
       }
     );
-    const cookie = `refresh-token=${token}; HttpOnly; Path=/; Secure; Max-Age=${this.configService.get<number>(
+    const cookie = `refresh-token=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${this.configService.get<number>(
       "JWT_REFRESH_TOKEN_EXPIRATION_TIME"
     )}`;
     return { cookie, token };
   }
 
   private async getLogoutCookies() {
-    return [
-      "access-token=; HttpOnly; Secure; Path=/; Max-Age=0",
-      "refresh-token=; HttpOnly; Secure; Path=/; Max-Age=0",
-    ];
+    return ["access-token=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0", "refresh-token=; HttpOnly; Path=/; Max-Age=0"];
   }
 }
