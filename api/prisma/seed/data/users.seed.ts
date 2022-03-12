@@ -8,6 +8,7 @@ const users: User[] = [
     name: "SkullCutter",
     email: "coolalan2016@gmail.com",
     roles: [Role.user],
+    avatarId: null,
   },
   {
     id: "9d89eedb-687d-4f5b-a6f2-dd4f723edf8e",
@@ -16,6 +17,7 @@ const users: User[] = [
     name: "Alan Au",
     email: "chunyaa2023@student.cis.edu.hk",
     roles: [Role.user],
+    avatarId: null,
   },
 ];
 

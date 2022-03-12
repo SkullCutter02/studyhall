@@ -4,10 +4,11 @@ import { Prisma, Role } from "@prisma/client";
 
 import { ChangeUserDetailsDto } from "./dto/changeUserDetails.dto";
 import { PrismaService } from "../prisma/prisma.service";
+import { FileService } from "../file/file.service";
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly fileService: FileService) {}
 
   public async create(email: string, name: string, hash: string) {
     const user = await this.prisma.user
@@ -101,6 +102,18 @@ export class UserService {
     return this.prisma.user.update({
       where: { id: userId },
       data: changeUserDetailsDto,
+    });
+  }
+
+  public async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
+    const avatar = await this.fileService.uploadPublicFile(imageBuffer, filename);
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        avatar: { connect: { id: avatar.id } },
+      },
+      include: { avatar: true },
     });
   }
 }

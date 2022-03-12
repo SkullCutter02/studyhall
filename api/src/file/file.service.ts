@@ -10,7 +10,7 @@ export class FileService {
   private readonly s3: S3;
 
   constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {
-    this.s3 = new S3();
+    this.s3 = new S3({ endpoint: this.configService.get("AWS_S3_BUCKET_ENDPOINT") });
   }
 
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {

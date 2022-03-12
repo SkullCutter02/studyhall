@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Patch, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
@@ -23,5 +24,12 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   changeUserDetails(@GetUser() user: User, @Body() changeUserDetailsDto: ChangeUserDetailsDto) {
     return this.userService.setDetails(user.id, changeUserDetailsDto);
+  }
+
+  @Post("/avatar")
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor("file"))
+  addAvatar(@GetUser() user: User, @UploadedFile() file: Express.Multer.File) {
+    return this.userService.addAvatar(user.id, file.buffer, file.originalname);
   }
 }
