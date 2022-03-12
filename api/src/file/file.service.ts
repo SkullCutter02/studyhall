@@ -19,6 +19,7 @@ export class FileService {
         Bucket: this.configService.get("AWS_PUBLIC_BUCKET_NAME"),
         Body: dataBuffer,
         Key: `${uuid()}-${filename}`,
+        ACL: "public-read",
       })
       .promise();
 
