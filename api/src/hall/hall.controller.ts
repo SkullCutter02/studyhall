@@ -76,6 +76,20 @@ export class HallController {
     return this.hallService.leave(hallId, user);
   }
 
+  @Patch("/:id/generate-invite")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, Hall, HallHook)
+  generateInviteId(@Param("id", ParseUUIDPipe) hallId: string) {
+    return this.hallService.setInviteId(hallId);
+  }
+
+  @Patch("/:id/invalidate-invite")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, Hall, HallHook)
+  invalidateInviteId(@Param("id", ParseUUIDPipe) hallId: string) {
+    return this.hallService.setInviteId(hallId, null);
+  }
+
   @Patch("/:id/promote/:userId")
   @UseGuards(JwtAuthGuard, AccessGuard)
   @UseAbility(Actions.update, Hall, HallHook)

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { HallRole, Prisma, User } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
+import { v4 as uuid } from "uuid";
 
 import { CreateHallDto } from "./dto/createHall.dto";
 import { PrismaService } from "../prisma/prisma.service";
@@ -125,6 +126,13 @@ export class HallService {
           },
         },
       },
+    });
+  }
+
+  public async setInviteId(hallId: string, inviteId: string = uuid()) {
+    return this.prisma.hall.update({
+      where: { id: hallId },
+      data: { inviteId },
     });
   }
 
