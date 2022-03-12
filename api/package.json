@@ -34,6 +34,7 @@
     "@nestjs/websockets": "^8.4.0",
     "@prisma/client": "3.8.1",
     "argon2": "^0.28.2",
+    "aws-sdk": "^2.1092.0",
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
     "class-transformer": "^0.4.0",

@@ -15,5 +15,10 @@ export const configModuleOptions: ConfigModuleOptions = {
     REDIS_PORT: Joi.number().required(),
     DATABASE_URL: Joi.string().required(),
     MAX_NUMBER_HALLS: Joi.number().required(),
+    AWS_REGION: Joi.string().required(),
+    AWS_ACCESS_KEY_ID: Joi.string().required(),
+    AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+    AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
+    AWS_S3_BUCKET_ENDPOINT: Joi.string().required(),
   }),
 };
