@@ -59,6 +59,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7",
+    "sharp": "^0.30.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -81,6 +82,7 @@
     "@types/nodemailer-sendgrid": "^1.0.0",
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
+    "@types/sharp": "^0.30.0",
     "@types/socket.io": "^3.0.2",
     "@types/supertest": "^2.0.10",
     "@types/uuid": "^8.3.1",

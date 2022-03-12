@@ -20,6 +20,7 @@ import { ChangeUserDetailsDto } from "./dto/changeUserDetails.dto";
 import { GetUser } from "../decorators/getUser.decorator";
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
 import { isFileImage } from "../utils/isFileImage";
+import { compressImageBuffer, ImagePreset } from "../utils/compressImageBuffer";
 
 @Controller("user")
 export class UserController {
@@ -42,10 +43,12 @@ export class UserController {
   @Post("/avatar")
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor("file"))
-  addAvatar(@GetUser() user: User, @UploadedFile() file: Express.Multer.File) {
+  async addAvatar(@GetUser() user: User, @UploadedFile() file: Express.Multer.File) {
     if (!isFileImage(file.mimetype)) throw new BadRequestException("File uploaded is not an image");
 
-    return this.userService.addAvatar(user.id, file.buffer, file.originalname);
+    const compressedImageBuffer = await compressImageBuffer(file.buffer, ImagePreset.SM);
+
+    return this.userService.addAvatar(user.id, compressedImageBuffer, file.originalname);
   }
 
   @Delete("/avatar")
