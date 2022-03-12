@@ -2,6 +2,7 @@ import { Info } from "./info";
 import { HallsUsers } from "./halls_users";
 import { Question } from "./question";
 import { Answer } from "./answer";
+import { PublicFile } from "./public_file";
 import { Role } from "@prisma/client";
 
 export class User {
@@ -24,4 +25,8 @@ export class User {
   questions: Question[];
 
   answers: Answer[];
+
+  avatar?: PublicFile;
+
+  avatarId?: string;
 }

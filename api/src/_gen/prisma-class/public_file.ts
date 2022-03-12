@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export class PublicFile {
   id: string;
 
@@ -8,4 +10,6 @@ export class PublicFile {
   url: string;
 
   key: string;
+
+  user?: User;
 }

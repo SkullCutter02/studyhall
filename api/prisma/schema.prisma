@@ -29,6 +29,9 @@ model User {
   questions Question[]
   answers   Answer[]
 
+  avatar PublicFile? @relation(fields: [avatarId], references: [id])
+  avatarId String?
+
   @@map("users")
 }
 
@@ -112,6 +115,8 @@ model PublicFile {
   updatedAt DateTime @updatedAt
   url       String @unique
   key       String @unique
+
+  user User?
 
   @@map("public_files")
 }
