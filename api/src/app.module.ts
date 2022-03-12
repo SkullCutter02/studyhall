@@ -14,6 +14,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { HallModule } from "./hall/hall.module";
 import { QuestionModule } from './question/question.module';
 import { AnswerModule } from './answer/answer.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AnswerModule } from './answer/answer.module';
     }),
     QuestionModule,
     AnswerModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
