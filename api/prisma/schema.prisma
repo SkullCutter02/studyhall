@@ -37,7 +37,7 @@ model Hall {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  inviteId  String?   @unique
+  inviteId  String?  @unique
 
   users     HallsUsers[]
   questions Question[]
@@ -104,6 +104,14 @@ model Info {
   currentHashedRefreshToken String?
 
   @@map("infos")
+}
+
+model PublicFile {
+  id  String @id
+  url String @unique
+  key String @unique
+
+  @@map("public_files")
 }
 
 enum Role {
