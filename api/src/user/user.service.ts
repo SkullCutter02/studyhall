@@ -108,6 +108,10 @@ export class UserService {
   public async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
     const avatar = await this.fileService.uploadPublicFile(imageBuffer, filename);
 
+    const user = await this.findById(userId);
+
+    if (user.avatarId) await this.fileService.deletePublicFile(user.avatarId);
+
     return this.prisma.user.update({
       where: { id: userId },
       data: {

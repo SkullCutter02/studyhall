@@ -26,4 +26,21 @@ export class FileService {
       data: { key: uploadResult.Key, url: uploadResult.Location },
     });
   }
+
+  async deletePublicFile(fileId: string) {
+    const file = await this.prisma.publicFile.findUnique({
+      where: { id: fileId },
+    });
+
+    await this.s3
+      .deleteObject({
+        Bucket: this.configService.get("AWS_PUBLIC_BUCKET_NAME"),
+        Key: file.key,
+      })
+      .promise();
+
+    await this.prisma.publicFile.delete({
+      where: { id: fileId },
+    });
+  }
 }
