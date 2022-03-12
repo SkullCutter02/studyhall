@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 import { FileInterceptor } from "@nestjs/platform-express";
 
@@ -7,6 +18,7 @@ import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { ChangeUserDetailsDto } from "./dto/changeUserDetails.dto";
 import { GetUser } from "../decorators/getUser.decorator";
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
+import { isFileImage } from "../utils/isFileImage";
 
 @Controller("user")
 export class UserController {
@@ -30,6 +42,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor("file"))
   addAvatar(@GetUser() user: User, @UploadedFile() file: Express.Multer.File) {
+    if (!isFileImage(file.mimetype)) throw new BadRequestException("File uploaded is not an image");
+
     return this.userService.addAvatar(user.id, file.buffer, file.originalname);
   }
 }
