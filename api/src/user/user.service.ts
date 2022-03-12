@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import * as argon2 from "argon2";
 import { Prisma, Role } from "@prisma/client";
 
@@ -119,5 +125,16 @@ export class UserService {
       },
       include: { avatar: true },
     });
+  }
+
+  public async deleteAvatar(userId: string) {
+    const user = await this.findById(userId);
+
+    if (user.avatarId) {
+      await this.fileService.deletePublicFile(user.avatarId);
+      return this.findById(userId);
+    } else {
+      throw new NotFoundException("User has no avatar to delete");
+    }
   }
 }

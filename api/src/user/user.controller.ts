@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Patch,
   Post,
@@ -45,5 +46,11 @@ export class UserController {
     if (!isFileImage(file.mimetype)) throw new BadRequestException("File uploaded is not an image");
 
     return this.userService.addAvatar(user.id, file.buffer, file.originalname);
+  }
+
+  @Delete("/avatar")
+  @UseGuards(JwtAuthGuard)
+  deleteAvatar(@GetUser() user: User) {
+    return this.userService.deleteAvatar(user.id);
   }
 }
