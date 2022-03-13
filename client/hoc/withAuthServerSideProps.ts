@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { QueryClient } from "react-query";
+import User from "../types/user.interface";
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
   ? U
@@ -27,12 +27,11 @@ type DefaultWithAuthServerSideProps = {
   user: User;
 };
 
-// TODO: create user interface
-interface User {}
-
 // TODO: move this to connect to API
-async function getUser() {
-  return {};
+async function getUser(): Promise<User> {
+  return {
+    id: "",
+  };
 }
 
 function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(

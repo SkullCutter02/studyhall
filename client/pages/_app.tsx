@@ -5,6 +5,8 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import Head from "next/head";
 import { ChakraProvider } from "@chakra-ui/react";
 
+import { UserProvider } from "../context/UserContext";
+
 import theme from "../theme/theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -13,12 +15,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
-        <Head>
-          <title>My Website</title>
-        </Head>
-        <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
-        </ChakraProvider>
+        <UserProvider user={pageProps.user}>
+          <Head>
+            <title>My Website</title>
+          </Head>
+          <ChakraProvider theme={theme}>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </UserProvider>
       </Hydrate>
       <ReactQueryDevtools />
     </QueryClientProvider>
