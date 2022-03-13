@@ -1,4 +1,14 @@
-import { Controller, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 import { FileService } from "./file.service";
@@ -20,5 +30,11 @@ export class FileController {
     const compressedImageBuffer = await compressImageBuffer(file.buffer, ImagePreset[preset]);
 
     return this.fileService.uploadPublicFile(compressedImageBuffer, file.originalname);
+  }
+
+  @Delete("/image/:id")
+  @UseGuards(JwtAuthGuard)
+  deleteImage(@Param("id", ParseUUIDPipe) imageId: string) {
+    return this.fileService.deletePublicFile(imageId);
   }
 }

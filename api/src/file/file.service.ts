@@ -40,7 +40,7 @@ export class FileService {
       })
       .promise();
 
-    await this.prisma.publicFile.delete({
+    return this.prisma.publicFile.delete({
       where: { id: fileId },
     });
   }
