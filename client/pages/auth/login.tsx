@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import TextInputControl from "../../components/widgets/TextInputControl";
 import LoginFormInput from "../../features/auth/types/loginFormInput.interface";
 import useLogin from "../../features/auth/hooks/useLogin";
+import { withAuthServerSideProps } from "../../hoc/withAuthServerSideProps";
 
 const LoginPage: React.FC = () => {
   const {
@@ -53,5 +54,7 @@ const LoginPage: React.FC = () => {
     </>
   );
 };
+
+export const getServerSideProps = withAuthServerSideProps(null, { redirectIfUserExists: true });
 
 export default LoginPage;

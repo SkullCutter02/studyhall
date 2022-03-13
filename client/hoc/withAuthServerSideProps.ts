@@ -15,6 +15,7 @@ export type InferWithAuthServerSideProps<
 
 type WithAuthServerSidePropsOptions = {
   authenticatedPage?: boolean;
+  redirectIfUserExists?: boolean;
 };
 
 export type AuthenticatedPageProps = {
@@ -31,7 +32,7 @@ type DefaultWithAuthServerSideProps = {
 
 function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (ctx: GetServerSidePropsContext, user?: User) => Promise<T>,
-  options: WithAuthServerSidePropsOptions = { authenticatedPage: true }
+  options: WithAuthServerSidePropsOptions = { authenticatedPage: true, redirectIfUserExists: false }
 ) {
   return async function getMergedServerSideProps(
     ctx: GetServerSidePropsContext
@@ -42,6 +43,16 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
       loggedInUser = await getMe(ctx);
     } catch {
       loggedInUser = null;
+    }
+
+    if (options.redirectIfUserExists && loggedInUser) {
+      return ({
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+        // We have to trick the TS compiler here.
+      } as unknown) as { props: T["props"] & DefaultWithAuthServerSideProps };
     }
 
     if (options.authenticatedPage && !loggedInUser) {
