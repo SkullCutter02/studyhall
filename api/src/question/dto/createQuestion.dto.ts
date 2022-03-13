@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
+import { IsOptional, IsString, MaxLength } from "class-validator";
 
 export class CreateQuestionDto {
   @IsString()
@@ -11,7 +11,4 @@ export class CreateQuestionDto {
   @IsString()
   @IsOptional()
   whiteboard?: string;
-
-  @IsUUID()
-  hallId: string;
 }

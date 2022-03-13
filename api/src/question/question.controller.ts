@@ -35,8 +35,12 @@ export class QuestionController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  createQuestion(@GetUser() user: User, @Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionService.create(createQuestionDto, user);
+  createQuestion(
+    @GetUser() user: User,
+    @Body() createQuestionDto: CreateQuestionDto,
+    @Query("hallId", ParseUUIDPipe) hallId: string
+  ) {
+    return this.questionService.create(createQuestionDto, user, hallId);
   }
 
   @Patch("/:id")

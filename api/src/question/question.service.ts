@@ -46,10 +46,10 @@ export class QuestionService {
     return { data: questions, hasMore: nextPageCount !== 0 };
   }
 
-  async create({ hallId, ...rest }: CreateQuestionDto, user: User) {
+  async create(createQuestionDto: CreateQuestionDto, user: User, hallId: string) {
     return this.prisma.question.create({
       data: {
-        ...rest,
+        ...createQuestionDto,
         hall: { connect: { id: hallId } },
         author: { connect: { id: user.id } },
       },
