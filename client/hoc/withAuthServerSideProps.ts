@@ -1,5 +1,7 @@
 import { GetServerSidePropsContext } from "next";
+
 import User from "../types/user.interface";
+import getMe from "../features/auth/api/getMe";
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
   ? U
@@ -27,13 +29,6 @@ type DefaultWithAuthServerSideProps = {
   user: User;
 };
 
-// TODO: move this to connect to API
-async function getUser(): Promise<User> {
-  return {
-    id: "",
-  };
-}
-
 function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (ctx: GetServerSidePropsContext, user?: User) => Promise<T>,
   options: WithAuthServerSidePropsOptions = { authenticatedPage: true }
@@ -44,7 +39,7 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     let loggedInUser: User | null;
 
     try {
-      loggedInUser = await getUser();
+      loggedInUser = await getMe(ctx);
     } catch {
       loggedInUser = null;
     }

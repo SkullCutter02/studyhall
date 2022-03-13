@@ -1,5 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Text } from "@chakra-ui/react";
+
+import { withAuthServerSideProps } from "../hoc/withAuthServerSideProps";
 
 const HomePage: React.FC<any> = () => {
   return (
@@ -8,5 +10,7 @@ const HomePage: React.FC<any> = () => {
     </>
   );
 };
+
+export const getServerSideProps = withAuthServerSideProps();
 
 export default HomePage;
