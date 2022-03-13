@@ -24,13 +24,13 @@ const LoginPage: React.FC = () => {
     ),
   });
 
-  const { isLoading, error, login } = useLogin();
+  const { isLoading, isError, error, mutate } = useLogin();
 
   return (
     <>
       <Box>
         <Heading>Login</Heading>
-        <form onSubmit={handleSubmit(login)}>
+        <form onSubmit={handleSubmit((input) => mutate(input))}>
           <TextInputControl
             name={"email"}
             label={"Email"}
@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
           <Button type={"submit"} disabled={isLoading}>
             Login
           </Button>
-          {error && <Text textStyle={"error"}>{error}</Text>}
+          {isError && <Text textStyle={"error"}>{(error as any).response.data.message}</Text>}
         </form>
       </Box>
     </>
