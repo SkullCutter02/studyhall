@@ -146,4 +146,11 @@ export class HallController {
 
     return this.hallService.addImage(hallId, compressedImageBuffer, file.originalname);
   }
+
+  @Delete("/:id/image")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.delete, Hall, HallHook)
+  deleteHallImage(@Param("id", ParseUUIDPipe) hallId: string) {
+    return this.hallService.deleteImage(hallId);
+  }
 }

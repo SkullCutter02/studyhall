@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { HallRole, Prisma, User } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
 import { v4 as uuid } from "uuid";
@@ -172,5 +172,16 @@ export class HallService {
       },
       include: { image: true },
     });
+  }
+
+  public async deleteImage(hallId: string) {
+    const hall = await this.findById(hallId);
+
+    if (hall.imageId) {
+      await this.fileService.deletePublicFile(hall.imageId);
+      return this.findById(hallId);
+    } else {
+      throw new NotFoundException("Hall has no image to delete");
+    }
   }
 }
