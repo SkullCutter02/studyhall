@@ -8,14 +8,15 @@ import {
   Input,
   InputProps,
 } from "@chakra-ui/react";
+import { UseFormRegister } from "react-hook-form";
 
 interface Props {
   name: string;
   label: string;
   isRequired?: boolean;
-  register?: any;
+  register?: UseFormRegister<any>;
   error?: {
-    message: string;
+    message?: string;
   };
   inputProps?: InputProps;
   labelProps?: FormLabelProps;

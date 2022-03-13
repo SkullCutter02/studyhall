@@ -9,10 +9,12 @@ const theme = extendTheme({
   colors: {
     primary: "#0584e3",
     secondary: "#fb452d",
+    secondaryText: "#a4a4a4",
   },
   textStyles: {
-    secondary: {
-      color: "#a4a4a4",
+    error: {
+      color: "#bd1717",
+      fontSize: 15,
     },
   },
 });

@@ -8,14 +8,14 @@ import {
   Textarea,
   TextareaProps,
 } from "@chakra-ui/react";
-import sizes from "@chakra-ui/theme/src/foundations/sizes";
+import { UseFormRegister } from "react-hook-form";
 
 interface Props {
   name: string;
   label: string;
-  height?: typeof sizes | number;
+  height?: number;
   isRequired?: boolean;
-  register?: any;
+  register?: UseFormRegister<any>;
   error?: {
     message: string;
   };

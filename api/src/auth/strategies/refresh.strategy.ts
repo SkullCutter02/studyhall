@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigService } from "@nestjs/config";
@@ -24,7 +24,12 @@ export class RefreshStrategy extends PassportStrategy(Strategy, "refresh") {
   async validate(req: Request, payload: JwtPayload) {
     const refreshToken = req?.cookies["refresh-token"];
     const user = await this.userService.findByRefreshToken(refreshToken, payload.id);
-    delete user.info;
+
+    if (!user) {
+      throw new UnauthorizedException("Unauthorized");
+    }
+
+    delete user?.info;
     return user;
   }
 }
