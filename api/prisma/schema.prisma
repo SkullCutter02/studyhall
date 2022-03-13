@@ -29,7 +29,7 @@ model User {
   questions Question[]
   answers   Answer[]
 
-  avatar   PublicFile? @relation(fields: [avatarId], references: [id])
+  avatar   PublicFile? @relation(fields: [avatarId], references: [id], onDelete: SetNull)
   avatarId String?     @unique
 
   @@map("users")
@@ -44,6 +44,9 @@ model Hall {
 
   users     HallsUsers[]
   questions Question[]
+
+  image   PublicFile? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  imageId String?
 
   @@map("halls")
 }
@@ -117,6 +120,7 @@ model PublicFile {
   key       String   @unique
 
   user User?
+  hall Hall?
 
   @@map("public_files")
 }

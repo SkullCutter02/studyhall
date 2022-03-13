@@ -7,10 +7,15 @@ import { CreateHallDto } from "./dto/createHall.dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { EditHallDto } from "./dto/editHall.dto";
 import { HallWithUsers } from "./types/hallWithUsers.type";
+import { FileService } from "../file/file.service";
 
 @Injectable()
 export class HallService {
-  constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+    private readonly fileService: FileService
+  ) {}
 
   public async findById(hallId: string, include?: Prisma.HallInclude) {
     return this.prisma.hall.findUnique({
@@ -151,5 +156,21 @@ export class HallService {
       throw new BadRequestException("Maximum joined hall number exceeded");
 
     return true;
+  }
+
+  public async addImage(hallId: string, imageBuffer: Buffer, filename: string) {
+    const image = await this.fileService.uploadPublicFile(imageBuffer, filename);
+
+    const hall = await this.findById(hallId);
+
+    if (hall.imageId) await this.fileService.deletePublicFile(hall.imageId);
+
+    return this.prisma.hall.update({
+      where: { id: hallId },
+      data: {
+        image: { connect: { id: image.id } },
+      },
+      include: { image: true },
+    });
   }
 }

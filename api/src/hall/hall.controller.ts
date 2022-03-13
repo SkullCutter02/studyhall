@@ -9,10 +9,13 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { HallRole, User, Prisma } from "@prisma/client";
 import { AccessGuard, Actions, UseAbility } from "nest-casl";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { GetUser } from "../decorators/getUser.decorator";
@@ -23,6 +26,8 @@ import { Hall } from "../_gen/prisma-class/hall";
 import { HallHook } from "./permissions/hall.hook";
 import { CheckMaximumHallsGuard } from "./guards/checkMaximumHalls.guard";
 import { ParseIncludeQueryPipe } from "../pipes/parseIncludeQuery.pipe";
+import { isFileImage } from "../utils/isFileImage";
+import { compressImageBuffer, ImagePreset } from "../utils/compressImageBuffer";
 
 @Controller("hall")
 export class HallController {
@@ -128,5 +133,17 @@ export class HallController {
     if (user.id === userId) throw new BadRequestException("You cannot kick yourself!");
 
     return this.hallService.removeUser(hallId, userId);
+  }
+
+  @Post("/:id/image")
+  @UseGuards(JwtAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, Hall, HallHook)
+  @UseInterceptors(FileInterceptor("file"))
+  async addHallImage(@Param("id", ParseUUIDPipe) hallId: string, @UploadedFile() file: Express.Multer.File) {
+    if (!isFileImage(file.mimetype)) throw new BadRequestException("File uploaded is not an image");
+
+    const compressedImageBuffer = await compressImageBuffer(file.buffer, ImagePreset.SM);
+
+    return this.hallService.addImage(hallId, compressedImageBuffer, file.originalname);
   }
 }

@@ -1,5 +1,6 @@
 import { HallsUsers } from "./halls_users";
 import { Question } from "./question";
+import { PublicFile } from "./public_file";
 
 export class Hall {
   id: string;
@@ -15,4 +16,8 @@ export class Hall {
   users: HallsUsers[];
 
   questions: Question[];
+
+  image?: PublicFile;
+
+  imageId?: string;
 }
