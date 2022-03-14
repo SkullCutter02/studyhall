@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 
 import User from "../types/user.interface";
-import getMe from "../features/auth/api/getMe";
+import getMeSsr from "../features/auth/api/getMeSsr";
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
   ? U
@@ -40,7 +40,7 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     let loggedInUser: User | null;
 
     try {
-      loggedInUser = await getMe(ctx);
+      loggedInUser = await getMeSsr(ctx);
     } catch {
       loggedInUser = null;
     }

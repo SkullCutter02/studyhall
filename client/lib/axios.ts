@@ -12,9 +12,12 @@ const instance = axios.create({
   withCredentials: true,
 });
 
-const refreshAuthLogic = (failedRequest) => {
+const refreshAuthLogic = async (failedRequest) => {
   if (failedRequest.response.data.message === "Unauthorized") {
-    return instance.get("auth/refresh").then();
+    await instance.get("auth/refresh", {
+      headers: { Cookie: failedRequest?.response?.config?.headers?.Cookie },
+    });
+    return Promise.resolve();
   } else {
     return Promise.resolve();
   }
