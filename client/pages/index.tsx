@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Text } from "@chakra-ui/react";
 
 import { withAuthServerSideProps } from "../hoc/withAuthServerSideProps";
+import { UserContext } from "../context/UserContext";
 
 const HomePage: React.FC<any> = () => {
+  const user = useContext(UserContext);
+
   return (
     <>
-      <Text color={"primary"}>Hello World</Text>
+      <Text color={"primary"}>Current logged in user: {user.name}</Text>
     </>
   );
 };
